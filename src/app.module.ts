@@ -7,7 +7,7 @@ import { PostsModule } from './posts/post.module';
 @Module({
   imports: [
     MongooseModule.forRoot(
-      'mongodb+srv://nursaadat:ChungHa456@runtimesposts.afvax.mongodb.net/posts?retryWrites=true&w=majority',
+      'mongodb+srv://nursaadat:gegeakutama@runtimesposts.afvax.mongodb.net/posts?retryWrites=true&w=majority',
     ),
     PostsModule,
   ],
