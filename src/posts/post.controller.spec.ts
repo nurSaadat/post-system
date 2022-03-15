@@ -1,22 +1,89 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PostsController } from './post.controller';
-import { PostService } from './post.service';
+import { CreatePostDto } from './dto/create-post.dto';
+import { PostsService } from './post.service';
 
-describe('AppController', () => {
-  let postController: PostsController;
+describe('Posts Controller', () => {
+  let controller: PostsController;
+  let service: PostsService;
+  const createPostDto: CreatePostDto = {
+    title: 'Cat #1',
+    body: 'Breed #1',
+    author: 'Saadat',
+  };
+
+  const mockPost = {
+    title: 'Cat #1',
+    body: 'Breed #1',
+    author: 'Saadat',
+    _id: 'a id',
+  };
 
   beforeEach(async () => {
-    const app: TestingModule = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       controllers: [PostsController],
-      providers: [PostService],
+      providers: [
+        {
+          provide: PostsService,
+          useValue: {
+            findAll: jest.fn().mockResolvedValue([
+              {
+                title: 'Cat #1',
+                body: 'Breed #1',
+                author: 'Saadat',
+              },
+              {
+                title: 'Cat #2',
+                body: 'Breed #2',
+                author: 'Trevi',
+              },
+              {
+                title: 'Cat #3',
+                body: 'Breed #3',
+                author: 'Vardanega',
+              },
+            ]),
+            create: jest.fn().mockResolvedValue(createPostDto),
+          },
+        },
+      ],
     }).compile();
 
-    postController = app.get<PostsController>(PostsController);
+    controller = module.get<PostsController>(PostsController);
+    service = module.get<PostsService>(PostsService);
   });
 
-  describe('root', () => {
-    // it('should return "Hello World!"', () => {
-    //   expect(appController.getHello()).toBe('Hello World!');
-    // });
+  describe('create()', () => {
+    it('should create a new post', async () => {
+      const createSpy = jest
+        .spyOn(service, 'create')
+        .mockResolvedValueOnce(mockPost);
+
+      await controller.create(createPostDto);
+      expect(createSpy).toHaveBeenCalledWith(createPostDto);
+    });
+  });
+
+  describe('findAll()', () => {
+    it('should return an array of posts', async () => {
+      expect(controller.findAll()).resolves.toEqual([
+        {
+          title: 'Cat #1',
+          body: 'Breed #1',
+          author: 'Saadat',
+        },
+        {
+          title: 'Cat #2',
+          body: 'Breed #2',
+          author: 'Trevi',
+        },
+        {
+          title: 'Cat #3',
+          body: 'Breed #3',
+          author: 'Vardanega',
+        },
+      ]);
+      expect(service.findAll).toHaveBeenCalled();
+    });
   });
 });

@@ -1,30 +1,30 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateCatDto } from './dto/create-post.dto';
-import { Cat, CatDocument } from './schemas/post.schema';
+import { CreatePostDto } from './dto/create-post.dto';
+import { Posts, PostsDocument } from './schemas/post.schema';
 
 @Injectable()
-export class CatsService {
+export class PostsService {
   constructor(
-    @InjectModel(Cat.name) private readonly catModel: Model<CatDocument>,
+    @InjectModel(Posts.name) private readonly postModel: Model<PostsDocument>,
   ) {}
 
-  async create(createCatDto: CreateCatDto): Promise<Cat> {
-    const createdCat = await this.catModel.create(createCatDto);
-    return createdCat;
+  async create(createPostDto: CreatePostDto): Promise<Posts> {
+    const createdPost = await this.postModel.create(createPostDto);
+    return createdPost;
   }
 
-  async findAll(): Promise<Cat[]> {
-    return this.catModel.find().exec();
+  async findAll(): Promise<Posts[]> {
+    return this.postModel.find().exec();
   }
 
-  async findOne(id: string): Promise<Cat> {
-    return this.catModel.findOne({ _id: id }).exec();
+  async findOne(id: string): Promise<Posts> {
+    return this.postModel.findOne({ _id: id }).exec();
   }
 
   async delete(id: string) {
-    const deletedCat = await this.catModel
+    const deletedCat = await this.postModel
       .findByIdAndRemove({ _id: id })
       .exec();
     return deletedCat;

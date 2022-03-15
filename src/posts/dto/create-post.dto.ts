@@ -1,5 +1,5 @@
-export class CreateCatDto {
-  readonly name: string;
-  readonly age: number;
-  readonly breed: string;
+export class CreatePostDto {
+  readonly title: string;
+  readonly body: string;
+  readonly author: string;
 }
